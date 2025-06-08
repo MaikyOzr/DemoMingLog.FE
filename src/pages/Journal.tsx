@@ -3,8 +3,9 @@ import { useNavigate } from "react-router-dom";
 import { JournalRequest, JournalResponse, MoodEnum } from "../types/journal";
 import { createJournal, updateJournal, deleteJournal } from "../api/jjournalApi";
 import { useJournalFetcher } from "../api/fetcher";
-// import { MoodChart } from "../components/MoodChart";
 import { TestChart } from "../components/TestChart";
+import { Chart } from "../components/Chart";
+import { StatCard } from "../components/StatCard";
 
 export const Journal = () => {
   const navigate = useNavigate();
@@ -20,10 +21,6 @@ export const Journal = () => {
   useEffect(() => {
     fetchEntries();
   }, []);
-
-  useEffect(() => {
-    console.log("Current selected state:", selected);
-  }, [selected]);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
     setFormData({
@@ -57,143 +54,186 @@ export const Journal = () => {
     }
   };
 
+  // Calculate statistics
+  const totalEntries = entries.length;
+  const positiveMoods = entries.filter(entry => entry.mood >= 3).length;
+  const averageMood = entries.reduce((acc, entry) => acc + entry.mood, 0) / totalEntries || 0;
+
   return (
-    <div className="container mx-auto p-4">
-      <h1 className="text-2xl font-bold mb-4">Journal</h1>
-      
-      {/* Mood Chart */}
-      {entries.length > 0 && (
-        <div className="mb-8">
-          {/* <MoodChart entries={entries} /> */}
-          <TestChart />
-        </div>
-      )}
-
-      {/* Journal Form */}
-      <form onSubmit={handleSubmit} className="mb-8">
-        <div className="mb-4">
-          <label className="block text-sm font-medium text-gray-700">Note</label>
-          <input
-            type="text"
-            name="note"
-            value={formData.note}
-            onChange={handleChange}
-            className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-primary focus:ring-primary"
-            required
-          />
-        </div>
-        <div className="mb-4">
-          <label className="block text-sm font-medium text-gray-700">Mood</label>
-          <select
-            name="mood"
-            value={formData.mood}
-            onChange={handleChange}
-            className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-primary focus:ring-primary"
-          >
-            {Object.entries(MoodEnum)
-              .filter(([key]) => isNaN(Number(key)))
-              .map(([key, value]) => (
-                <option key={key} value={value}>
-                  {key}
-                </option>
-              ))}
-          </select>
-        </div>
-        <div className="mb-4">
-          <label className="block text-sm font-medium text-gray-700">Tag</label>
-          <input
-            type="text"
-            name="tag"
-            value={formData.tag}
-            onChange={handleChange}
-            className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-primary focus:ring-primary"
-          />
-        </div>
-        <button
-          type="submit"
-          className="bg-primary text-white px-4 py-2 rounded hover:bg-opacity-90"
-        >
-          Add Entry
-        </button>
-      </form>
-
-      {/* Journal Entries List */}
-      <div className="space-y-4">
-        {entries.map((entry) => (
-          <div
-            key={entry.id}
-            className="border rounded-lg p-4 hover:bg-gray-50 cursor-pointer"
-            onClick={() => setSelected(entry)}
-          >
-            <div className="flex justify-between items-start">
-              <div>
-                <p className="font-medium">{entry.note}</p>
-                <p className="text-sm text-gray-500">
-                  Mood: {MoodEnum[entry.mood]}
-                </p>
-                {entry.tag && (
-                  <span className="inline-block bg-gray-200 rounded-full px-3 py-1 text-sm font-semibold text-gray-700">
-                    {entry.tag}
-                  </span>
-                )}
-              </div>
-              <button
-                onClick={(e) => {
-                  e.stopPropagation();
-                  handleDelete(entry.id);
-                }}
-                className="text-red-500 hover:text-red-700"
-              >
-                Delete
-              </button>
-            </div>
-          </div>
-        ))}
+    <div className="space-y-8">
+      <div className="flex justify-between items-center">
+        <h1 className="text-2xl font-bold text-secondary-900">Journal Dashboard</h1>
+        <button className="btn btn-primary">New Entry</button>
       </div>
 
-      {/* Деталі вибраного журналу */}
-      {selected && selected.id && (
-        <div className="mt-8 p-4 border rounded bg-gray-100">
-          <h3 className="text-lg font-bold mb-2">Edit Journal</h3>
-          <form
-            onSubmit={async (e) => {
-              e.preventDefault();
-              if (!selected?.id) {
-                alert("Invalid journal id");
-                return;
-              }
-              try {
-                await updateJournal(selected.id, {
-                  note: selected.note,
-                  tag: selected.tag,
-                });
-                fetchEntries();
-                setSelected(null);
-              } catch (err) {
-                alert("Update failed");
-              }
-            }}
-            className="flex flex-col gap-2"
-          >
+      {/* Statistics Cards */}
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+        <StatCard
+          title="Total Entries"
+          value={totalEntries}
+          trend={{ value: 12, isPositive: true }}
+        />
+        <StatCard
+          title="Positive Moods"
+          value={`${((positiveMoods / totalEntries) * 100).toFixed(1)}%`}
+          trend={{ value: 8, isPositive: true }}
+        />
+        <StatCard
+          title="Average Mood"
+          value={averageMood.toFixed(1)}
+          trend={{ value: 5, isPositive: true }}
+        />
+      </div>
+
+      {/* Charts */}
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        <Chart title="Mood Trends">
+          <TestChart />
+        </Chart>
+        <Chart title="Mood Distribution">
+          <TestChart />
+        </Chart>
+      </div>
+
+      {/* Journal Form */}
+      <div className="card">
+        <h2 className="text-xl font-semibold mb-4">Add New Entry</h2>
+        <form onSubmit={handleSubmit} className="space-y-4">
+          <div>
+            <label className="block text-sm font-medium text-secondary-700 mb-1">Note</label>
             <input
               type="text"
-              value={selected.note}
-              onChange={e => setSelected({ ...selected, note: e.target.value })}
-              className="border p-2"
+              name="note"
+              value={formData.note}
+              onChange={handleChange}
+              className="input"
+              required
             />
+          </div>
+          <div>
+            <label className="block text-sm font-medium text-secondary-700 mb-1">Mood</label>
+            <select
+              name="mood"
+              value={formData.mood}
+              onChange={handleChange}
+              className="input"
+            >
+              {Object.entries(MoodEnum)
+                .filter(([key]) => isNaN(Number(key)))
+                .map(([key, value]) => (
+                  <option key={key} value={value}>
+                    {key}
+                  </option>
+                ))}
+            </select>
+          </div>
+          <div>
+            <label className="block text-sm font-medium text-secondary-700 mb-1">Tag</label>
             <input
               type="text"
-              value={selected.tag}
-              onChange={e => setSelected({ ...selected, tag: e.target.value })}
-              className="border p-2"
+              name="tag"
+              value={formData.tag}
+              onChange={handleChange}
+              className="input"
             />
-            <button type="submit" className="bg-green-500 text-white p-2 rounded">
-              Save
-            </button>
-            <button type="button" className="bg-gray-400 text-white p-2 rounded" onClick={() => setSelected(null)}>
-              Close
-            </button>
-          </form>
+          </div>
+          <button type="submit" className="btn btn-primary">
+            Add Entry
+          </button>
+        </form>
+      </div>
+
+      {/* Journal Entries List */}
+      <div className="card">
+        <h2 className="text-xl font-semibold mb-4">Recent Entries</h2>
+        <div className="space-y-4">
+          {entries.map((entry) => (
+            <div
+              key={entry.id}
+              className="p-4 border border-secondary-200 rounded-lg hover:bg-secondary-50 transition-colors cursor-pointer"
+              onClick={() => setSelected(entry)}
+            >
+              <div className="flex justify-between items-start">
+                <div>
+                  <p className="font-medium text-secondary-900">{entry.note}</p>
+                  <p className="text-sm text-secondary-500">
+                    Mood: {MoodEnum[entry.mood]}
+                  </p>
+                  {entry.tag && (
+                    <span className="inline-block bg-primary-100 text-primary-700 rounded-full px-3 py-1 text-sm font-semibold mt-2">
+                      {entry.tag}
+                    </span>
+                  )}
+                </div>
+                <button
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    handleDelete(entry.id);
+                  }}
+                  className="text-error hover:text-error/80"
+                >
+                  Delete
+                </button>
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+
+      {/* Edit Modal */}
+      {selected && (
+        <div className="fixed inset-0 bg-secondary-900/50 flex items-center justify-center p-4">
+          <div className="card max-w-lg w-full">
+            <h3 className="text-xl font-semibold mb-4">Edit Entry</h3>
+            <form
+              onSubmit={async (e) => {
+                e.preventDefault();
+                if (!selected?.id) return;
+                try {
+                  await updateJournal(selected.id, {
+                    note: selected.note,
+                    tag: selected.tag,
+                  });
+                  fetchEntries();
+                  setSelected(null);
+                } catch (err) {
+                  alert("Update failed");
+                }
+              }}
+              className="space-y-4"
+            >
+              <div>
+                <label className="block text-sm font-medium text-secondary-700 mb-1">Note</label>
+                <input
+                  type="text"
+                  value={selected.note}
+                  onChange={e => setSelected({ ...selected, note: e.target.value })}
+                  className="input"
+                />
+              </div>
+              <div>
+                <label className="block text-sm font-medium text-secondary-700 mb-1">Tag</label>
+                <input
+                  type="text"
+                  value={selected.tag}
+                  onChange={e => setSelected({ ...selected, tag: e.target.value })}
+                  className="input"
+                />
+              </div>
+              <div className="flex gap-2">
+                <button type="submit" className="btn btn-primary flex-1">
+                  Save Changes
+                </button>
+                <button
+                  type="button"
+                  className="btn btn-secondary flex-1"
+                  onClick={() => setSelected(null)}
+                >
+                  Cancel
+                </button>
+              </div>
+            </form>
+          </div>
         </div>
       )}
     </div>

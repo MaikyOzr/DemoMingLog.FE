@@ -20,26 +20,28 @@ export const Home = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen">
       {/* Navigation */}
-      <nav className="bg-white shadow-sm">
+      <nav className="bg-white/80 backdrop-blur-md fixed w-full z-50 border-b border-gray-100">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between h-16">
             <div className="flex items-center">
-              <span className="text-xl font-bold text-gray-900">MindLog 🧠</span>
+              <span className="text-xl font-bold bg-gradient-to-r from-primary-600 to-primary-400 bg-clip-text text-transparent">
+                MindLog 🧠
+              </span>
             </div>
             <div className="flex items-center space-x-4">
               {isAuthenticated ? (
                 <>
                   <Link
                     to="/journal"
-                    className="text-gray-600 hover:text-gray-900"
+                    className="text-gray-600 hover:text-primary-600 transition-colors"
                   >
                     Мій журнал
                   </Link>
                   <button
                     onClick={handleLogout}
-                    className="text-gray-600 hover:text-gray-900"
+                    className="text-gray-600 hover:text-primary-600 transition-colors"
                   >
                     Вийти
                   </button>
@@ -48,13 +50,13 @@ export const Home = () => {
                 <>
                   <Link
                     to="/auth/signin"
-                    className="text-gray-600 hover:text-gray-900"
+                    className="text-gray-600 hover:text-primary-600 transition-colors"
                   >
                     Увійти
                   </Link>
                   <Link
                     to="/auth/signup"
-                    className="bg-primary text-white px-4 py-2 rounded-md hover:bg-opacity-90"
+                    className="bg-primary-600 text-white px-4 py-2 rounded-lg hover:bg-primary-700 transition-colors shadow-soft"
                   >
                     Зареєструватися
                   </Link>
@@ -66,50 +68,102 @@ export const Home = () => {
       </nav>
 
       {/* Hero Section */}
-      <div className="bg-white shadow-sm">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-          <div className="text-center">
+      <div className="pt-24 pb-16">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center animate-fade-in">
             <h1 className="text-4xl font-extrabold text-gray-900 sm:text-5xl sm:tracking-tight lg:text-6xl">
-              MindLog 🧠
+              <span className="block">Відстежуйте свій</span>
+              <span className="block bg-gradient-to-r from-primary-600 to-primary-400 bg-clip-text text-transparent">
+                психічний стан
+              </span>
             </h1>
             <p className="mt-5 max-w-xl mx-auto text-xl text-gray-500">
-              Відстежуйте свій психічний стан, настрій та думки щодня
+              Приєднуйтесь до тисяч користувачів, які вже покращили своє психічне здоров'я
             </p>
+            {!isAuthenticated && (
+              <div className="mt-8 flex justify-center space-x-4">
+                <Link
+                  to="/auth/signup"
+                  className="inline-flex items-center px-6 py-3 border border-transparent text-base font-medium rounded-lg shadow-soft text-white bg-primary-600 hover:bg-primary-700 transition-all hover:shadow-hover"
+                >
+                  Почніть безкоштовно
+                </Link>
+                <Link
+                  to="/auth/signin"
+                  className="inline-flex items-center px-6 py-3 border border-gray-200 text-base font-medium rounded-lg text-gray-700 bg-white hover:bg-gray-50 transition-all shadow-soft hover:shadow-hover"
+                >
+                  Увійти
+                </Link>
+              </div>
+            )}
+          </div>
+        </div>
+      </div>
+
+      {/* Social Proof */}
+      <div className="py-12 bg-white/50">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="grid grid-cols-1 gap-8 md:grid-cols-3">
+            <div className="text-center">
+              <div className="text-4xl font-bold text-primary-600">10K+</div>
+              <div className="mt-2 text-gray-600">Активних користувачів</div>
+            </div>
+            <div className="text-center">
+              <div className="text-4xl font-bold text-primary-600">98%</div>
+              <div className="mt-2 text-gray-600">Задоволених користувачів</div>
+            </div>
+            <div className="text-center">
+              <div className="text-4xl font-bold text-primary-600">24/7</div>
+              <div className="mt-2 text-gray-600">Підтримка</div>
+            </div>
           </div>
         </div>
       </div>
 
       {/* Features Section */}
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-        <div className="grid grid-cols-1 gap-8 md:grid-cols-3">
-          <div className="bg-white p-6 rounded-lg shadow-sm">
-            <h3 className="text-lg font-medium text-gray-900">Відстеження настрою</h3>
-            <p className="mt-2 text-gray-500">
-              Записуйте свій настрій щодня та отримуйте детальну статистику
-            </p>
-          </div>
-          <div className="bg-white p-6 rounded-lg shadow-sm">
-            <h3 className="text-lg font-medium text-gray-900">Щоденник думок</h3>
-            <p className="mt-2 text-gray-500">
-              Зберігайте свої думки та роздуми в зручному форматі
-            </p>
-          </div>
-          <div className="bg-white p-6 rounded-lg shadow-sm">
-            <h3 className="text-lg font-medium text-gray-900">Аналітика</h3>
-            <p className="mt-2 text-gray-500">
-              Отримуйте інсайти про свій психічний стан завдяки графікам
-            </p>
+      <div className="py-16">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="grid grid-cols-1 gap-8 md:grid-cols-3">
+            <div className="bg-white p-8 rounded-2xl shadow-soft hover:shadow-hover transition-all transform hover:-translate-y-1">
+              <div className="w-12 h-12 bg-primary-100 rounded-lg flex items-center justify-center mb-4">
+                <span className="text-2xl">📊</span>
+              </div>
+              <h3 className="text-xl font-semibold text-gray-900">Відстеження настрою</h3>
+              <p className="mt-2 text-gray-500">
+                Записуйте свій настрій щодня та отримуйте детальну статистику
+              </p>
+            </div>
+            <div className="bg-white p-8 rounded-2xl shadow-soft hover:shadow-hover transition-all transform hover:-translate-y-1">
+              <div className="w-12 h-12 bg-primary-100 rounded-lg flex items-center justify-center mb-4">
+                <span className="text-2xl">📝</span>
+              </div>
+              <h3 className="text-xl font-semibold text-gray-900">Щоденник думок</h3>
+              <p className="mt-2 text-gray-500">
+                Зберігайте свої думки та роздуми в зручному форматі
+              </p>
+            </div>
+            <div className="bg-white p-8 rounded-2xl shadow-soft hover:shadow-hover transition-all transform hover:-translate-y-1">
+              <div className="w-12 h-12 bg-primary-100 rounded-lg flex items-center justify-center mb-4">
+                <span className="text-2xl">📈</span>
+              </div>
+              <h3 className="text-xl font-semibold text-gray-900">Аналітика</h3>
+              <p className="mt-2 text-gray-500">
+                Отримуйте інсайти про свій психічний стан завдяки графікам
+              </p>
+            </div>
           </div>
         </div>
       </div>
 
       {/* Chart Preview - Only show for authenticated users */}
       {isAuthenticated && entries.length > 0 && (
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-          <div className="bg-white p-6 rounded-lg shadow-sm">
-            <h2 className="text-2xl font-bold text-gray-900 mb-6">Ваш настрій за останній час</h2>
-            <div className="h-[300px]">
-              <MoodChart entries={entries} />
+        <div className="py-16">
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div className="bg-white p-8 rounded-2xl shadow-soft">
+              <h2 className="text-2xl font-bold text-gray-900 mb-6">Ваш настрій за останній час</h2>
+              <div className="h-[300px]">
+                <MoodChart entries={entries} />
+              </div>
             </div>
           </div>
         </div>
@@ -117,22 +171,25 @@ export const Home = () => {
 
       {/* CTA Section - Only show for non-authenticated users */}
       {!isAuthenticated && (
-        <div className="bg-white shadow-sm">
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+        <div className="py-16 bg-gradient-to-b from-white to-primary-50">
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div className="text-center">
               <h2 className="text-3xl font-extrabold text-gray-900 sm:text-4xl">
                 Почніть відстежувати свій настрій сьогодні
               </h2>
+              <p className="mt-4 text-lg text-gray-500">
+                Приєднуйтесь до нашої спільноти та покращуйте своє психічне здоров'я
+              </p>
               <div className="mt-8 flex justify-center space-x-4">
                 <Link
                   to="/auth/signup"
-                  className="inline-flex items-center px-6 py-3 border border-transparent text-base font-medium rounded-md shadow-sm text-white bg-primary hover:bg-opacity-90"
+                  className="inline-flex items-center px-6 py-3 border border-transparent text-base font-medium rounded-lg shadow-soft text-white bg-primary-600 hover:bg-primary-700 transition-all hover:shadow-hover"
                 >
                   Зареєструватися
                 </Link>
                 <Link
                   to="/auth/signin"
-                  className="inline-flex items-center px-6 py-3 border border-gray-300 text-base font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50"
+                  className="inline-flex items-center px-6 py-3 border border-gray-200 text-base font-medium rounded-lg text-gray-700 bg-white hover:bg-gray-50 transition-all shadow-soft hover:shadow-hover"
                 >
                   Увійти
                 </Link>
