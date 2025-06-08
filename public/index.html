@@ -5,6 +5,529 @@
     <link rel="icon" href="%PUBLIC_URL%/favicon.ico" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="theme-color" content="#000000" />
+    <style>
+/* Base styles */
+html,
+body {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+body {
+  background-color: #121212; /* Very dark background from Figma */
+  color: #E0E0E0; /* Light text for readability */
+  font-family: 'Inter', sans-serif; /* Changed to Inter */
+  line-height: 1.6;
+}
+
+*, *::before, *::after {
+  box-sizing: inherit;
+}
+
+h1 {
+  font-size: 2.5rem;
+  font-weight: 700;
+  color: #F0F0F0; /* Lighter color for main headings */
+  margin-bottom: 1.5rem;
+  font-family: 'Outfit', sans-serif; /* Outfit for headings */
+}
+
+.hero-section {
+  text-align: center;
+  margin-bottom: 0;
+  padding: 3rem 1.5rem 0; /* Removed padding-bottom to eliminate the visual partition */
+  background-color: transparent;
+  border-radius: 0;
+  box-shadow: none;
+}
+
+.hero-title {
+  font-size: 3.5rem;
+  font-weight: 900;
+  color: #6C47F6; /* Vibrant purple from Figma */
+  margin-bottom: 1.5rem;
+  letter-spacing: -0.05em;
+  font-family: 'Outfit', sans-serif; /* Outfit for headings */
+}
+
+.hero-subtitle {
+  font-size: 1.5rem;
+  color: #B0B0C0; /* Lighter grey for subtitle */
+  line-height: 1.8;
+  max-width: 700px;
+  margin: 0 auto;
+}
+
+@keyframes fadeInDown {
+  from {
+    opacity: 0;
+    transform: translate3d(0, -30px, 0);
+  }
+  to {
+    opacity: 1;
+    transform: translate3d(0, 0, 0);
+  }
+}
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translate3d(0, 30px, 0);
+  }
+  to {
+    opacity: 1;
+    transform: translate3d(0, 0, 0);
+  }
+}
+
+.hello-world-title {
+  font-size: 2rem;
+  font-weight: 700;
+  text-decoration: none;
+  text-align: center;
+  color: #6C47F6; /* Consistent vibrant color for titles */
+  margin-bottom: 1rem;
+  font-family: 'Outfit', sans-serif; /* Outfit for headings */
+}
+
+h2 {
+  font-size: 2.25rem;
+  font-weight: 700;
+  color: #F0F0F0;
+  margin-bottom: 1.25rem;
+  font-family: 'Outfit', sans-serif;
+}
+
+h3 {
+  font-size: 1.75rem;
+  font-weight: 600;
+  color: #F0F0F0;
+  margin-bottom: 1rem;
+  font-family: 'Outfit', sans-serif;
+}
+
+p {
+  color: #B0B0C0;
+  line-height: 1.7;
+}
+
+/* App container styles */
+.app-container {
+  min-height: 100vh;
+  background: #121212; /* Solid dark background for consistency with Figma */
+}
+
+/* Decorative elements (adjust colors for new gradient) */
+.decorative-elements-wrapper {
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+.decorative-blob {
+  position: absolute;
+  width: 30rem; /* Increased size */
+  height: 30rem; /* Increased size */
+  border-radius: 9999px;
+  mix-blend-mode: overlay;
+  filter: blur(20px);
+  opacity: 0.7;
+}
+
+.blob-primary-100 {
+  background-color: #3A3A3A; /* Darker, deeper colors */
+}
+
+.blob-secondary-100 {
+  background-color: #555555;
+}
+
+.blob-primary-200 {
+  background-color: #6C47F6;
+}
+
+.blob-top-right {
+  top: -10rem;
+  right: -10rem;
+}
+
+.blob-bottom-left {
+  bottom: -10rem;
+  left: -10rem;
+}
+
+.blob-center {
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+
+/* Animations */
+@keyframes blob {
+  0% {
+    transform: translate(0, 0) scale(1);
+  }
+  33% {
+    transform: translate(60px, -100px) scale(1.2); /* More pronounced movement and scale */
+  }
+  66% {
+    transform: translate(-40px, 40px) scale(0.8); /* More pronounced movement and scale */
+  }
+  100% {
+    transform: translate(0, 0) scale(1);
+  }
+}
+
+.animate-blob {
+  animation: blob 7s infinite;
+}
+
+.animation-delay-2000 {
+  animation-delay: 2s;
+}
+
+.animation-delay-4000 {
+  animation-delay: 4s;
+}
+
+/* Main content wrapper */
+.main-content-wrapper {
+  position: relative;
+  max-width: 80rem;
+  margin-left: auto;
+  margin-right: auto;
+  padding-left: 1rem;
+  padding-right: 1rem;
+  padding-top: 0; /* Removed padding-top to eliminate the visual partition */
+  padding-bottom: 4rem;
+}
+
+@media (min-width: 640px) {
+  .main-content-wrapper {
+    padding-left: 1.5rem;
+    padding-right: 1.5rem;
+  }
+}
+
+@media (min-width: 1024px) {
+  .main-content-wrapper {
+    padding-left: 2rem;
+    padding-right: 2rem;
+  }
+}
+
+/* Navbar styles */
+.navbar-container {
+  width: 100%;
+  z-index: 50;
+  height: 4rem;
+  display: flex;
+  align-items: center;
+  margin-top: -1px; /* Added to eliminate the visual partition */
+}
+
+.navbar-brand {
+  font-size: 1.5rem;
+  font-weight: 700;
+  background: linear-gradient(to right, #6C47F6, #8D8DFF); /* Purple gradient */
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  color: transparent;
+  font-family: 'Outfit', sans-serif;
+}
+
+.nav-link {
+  color: #B0B0C0;
+  transition: color 0.2s ease;
+  padding: 0.5rem 1rem;
+  text-decoration: none;
+}
+
+.nav-link:hover {
+  color: #8D8DFF;
+}
+
+/* Hero section styles */
+.hero-main-title {
+  font-size: 3.5rem;
+  font-weight: 900;
+  color: #F0F0F0;
+  margin-bottom: 1.5rem;
+  font-family: 'Outfit', sans-serif;
+  line-height: 1.2;
+}
+
+.hero-main-title-accent {
+  background: linear-gradient(to right, #6C47F6, #8D8DFF); /* Purple gradient */
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  color: transparent;
+}
+
+.hero-main-subtitle {
+  font-size: 1.25rem;
+  color: #B0B0C0;
+  line-height: 1.8;
+  max-width: 700px;
+  margin: 0 auto 2rem auto; /* Added bottom margin */
+}
+
+/* Button group for hero section */
+.button-group {
+  display: flex;
+  justify-content: center;
+  gap: 1rem; /* Space between buttons */
+  margin-top: 2rem;
+}
+
+/* Social Proof Section */
+.social-proof-section {
+  padding: 3rem 0;
+  margin-bottom: 3rem;
+}
+
+.social-proof-item {
+  text-align: center;
+}
+
+.social-proof-value {
+  font-size: 3rem;
+  font-weight: 800;
+  color: #6C47F6; /* Vibrant accent color */
+  font-family: 'Outfit', sans-serif;
+}
+
+.social-proof-label {
+  font-size: 1.1rem;
+  color: #B0B0C0;
+  margin-top: 0.5rem;
+}
+
+/* Features Section */
+.features-section {
+  padding: 4rem 0;
+}
+
+.feature-card {
+  padding: 2rem;
+  transition: all 0.3s ease;
+  transform: translateY(0);
+}
+
+.feature-card:hover {
+  box-shadow: 0 15px 30px rgba(0, 0, 0, 0.3); /* More intense shadow on hover */
+  transform: translateY(-5px); /* Slight lift on hover */
+}
+
+.feature-icon-wrapper {
+  width: 3.5rem;
+  height: 3.5rem;
+  background-color: #2C2C4E; /* Darker accent background */
+  border-radius: 0.75rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 1.5rem;
+}
+
+.feature-icon {
+  font-size: 1.8rem;
+}
+
+.feature-title {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: #F0F0F0;
+  margin-bottom: 0.75rem;
+  font-family: 'Outfit', sans-serif;
+}
+
+.feature-description {
+  font-size: 1rem;
+  color: #B0B0C0;
+  line-height: 1.7;
+}
+
+/* Chart Preview Section */
+.chart-preview-section {
+  padding: 4rem 0;
+}
+
+.chart-card {
+  padding: 2.5rem;
+}
+
+.chart-title {
+  font-size: 2rem;
+  font-weight: 700;
+  color: #F0F0F0;
+  margin-bottom: 1.5rem;
+  font-family: 'Outfit', sans-serif;
+}
+
+.chart-height {
+  height: 300px; /* Fixed height for chart */
+}
+
+/* CTA Section */
+.cta-section {
+  padding: 4rem 0;
+  text-align: center;
+}
+
+.cta-title {
+  font-size: 2.5rem;
+  font-weight: 800;
+  color: #F0F0F0;
+  margin-bottom: 1rem;
+  font-family: 'Outfit', sans-serif;
+}
+
+.cta-subtitle {
+  font-size: 1.25rem;
+  color: #B0B0C0;
+  line-height: 1.8;
+  max-width: 600px;
+  margin: 0 auto 2.5rem auto;
+}
+
+/* Component styles */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.8rem 1.7rem; /* Fine-tuned padding for a more rectangular shape */
+  border: 1px solid transparent;
+  font-size: 0.95rem; /* Slightly smaller font size */
+  font-weight: 600;
+  border-radius: 0.4rem; /* Less rounded corners to match Figma */
+  box-shadow: 0 3px 6px rgba(0, 0, 0, 0.3); /* Softer initial shadow */
+  outline: none;
+  transition: all 0.2s ease-in-out; /* Adjusted transition for smoother feel */
+  cursor: pointer;
+  letter-spacing: 0.015em; /* Adjusted letter spacing */
+}
+
+.btn-primary {
+  background-color: #6C47F6; /* Vibrant primary from Figma */
+  color: #FFFFFF; /* Light text on primary button */
+  border-color: #6C47F6; /* Border matches background */
+}
+
+.btn-primary:hover {
+  background-color: #553BBF; /* Darker purple on hover */
+  border-color: #553BBF;
+  box-shadow: 0 5px 12px rgba(0, 0, 0, 0.5); /* Refined shadow on hover */
+  transform: translateY(-1px); /* Slight lift on hover */
+}
+
+.btn-primary:focus {
+  box-shadow: 0 0 0 3px rgba(108, 71, 246, 0.7), 0 0 0 5px rgba(108, 71, 246, 0.4); /* Refined focus shadow */
+}
+
+.btn-secondary {
+  background-color: #282828; /* Darker secondary background */
+  color: #E0E0E0;
+  border-color: #444444; /* Darker border */
+}
+
+.btn-secondary:hover {
+  background-color: #3A3A3A;
+  border-color: #3A3A3A;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.4); /* Refined shadow on hover */
+  transform: translateY(-1px);
+}
+
+.btn-secondary:focus {
+  box-shadow: 0 0 0 3px rgba(68, 68, 68, 0.7), 0 0 0 5px rgba(68, 68, 68, 0.4); /* Refined focus shadow */
+}
+
+.card {
+  background-color: #1A1A1A; /* Darker card background from Figma */
+  border-radius: 1.5rem;
+  box-shadow: 0 15px 30px rgba(0, 0, 0, 0.4); /* Darker shadow */
+  padding: 2.5rem;
+  margin-bottom: 3rem;
+}
+
+.input {
+  display: block;
+  width: 100%;
+  border-radius: 0.75rem;
+  border: 1px solid #444444; /* Darker border */
+  padding: 0.75rem 1rem;
+  background-color: #121212; /* Dark input background */
+  color: #E0E0E0; /* Light input text */
+  box-shadow: inset 0 1px 2px rgba(0,0,0,0.2); /* subtle inner shadow */
+  outline: none;
+  transition: border-color 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+}
+
+.input:focus {
+  border-color: #6C47F6;
+  box-shadow: 0 0 0 3px rgba(108, 71, 246, 0.4);
+}
+
+.label {
+  display: block;
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: #E0E0E0; /* Light labels */
+  margin-bottom: 0.5rem;
+}
+
+.chart-container {
+  padding: 1.5rem;
+  background-color: #1A1A1A; /* Darker background for chart container */
+  border-radius: 1.5rem;
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.3);
+}
+
+.stat-card {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  padding: 1.5rem;
+  border-radius: 1.5rem;
+  background-color: #1A1A1A; /* Darker stat card background */
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.3);
+}
+
+.stat-value {
+  font-size: 1.875rem;
+  font-weight: 800;
+  color: #6C47F6; /* Vibrant color for values */
+  font-family: 'Outfit', sans-serif;
+}
+
+.stat-label {
+  font-size: 1rem;
+  color: #B0B0C0;
+}
+
+/* Custom animations */
+.animate-fade-in {
+  animation: fadeIn 0.5s ease-in-out;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+    </style>
     <meta
       name="description"
       content="Web site created using create-react-app"
@@ -15,10 +538,10 @@
       user's mobile device or desktop. See https://developers.google.com/web/fundamentals/web-app-manifest/
     -->
     <link rel="manifest" href="%PUBLIC_URL%/manifest.json" />
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800;900&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <!--
       Notice the use of %PUBLIC_URL% in the tags above.
       It will be replaced with the URL of the `public` folder during the build.
-      Only files inside the `public` folder can be referenced from the HTML.
 
       Unlike "/favicon.ico" or "favicon.ico", "%PUBLIC_URL%/favicon.ico" will
       work correctly both with client-side routing and a non-root public URL.
