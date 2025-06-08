@@ -1,9 +1,10 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, ChangeEvent, FormEvent } from "react";
 import { useNavigate } from "react-router-dom";
 import { JournalRequest, JournalResponse, MoodEnum } from "../types/journal";
 import { createJournal, updateJournal, deleteJournal } from "../api/jjournalApi";
 import { useJournalFetcher } from "../api/fetcher";
-
+// import { MoodChart } from "../components/MoodChart";
+import { TestChart } from "../components/TestChart";
 
 export const Journal = () => {
   const navigate = useNavigate();
@@ -57,83 +58,98 @@ export const Journal = () => {
   };
 
   return (
-    <div className="p-4">
-      <h1 className="text-xl font-bold mb-4">Journal</h1>
+    <div className="container mx-auto p-4">
+      <h1 className="text-2xl font-bold mb-4">Journal</h1>
+      
+      {/* Mood Chart */}
+      {entries.length > 0 && (
+        <div className="mb-8">
+          {/* <MoodChart entries={entries} /> */}
+          <TestChart />
+        </div>
+      )}
 
-      <form onSubmit={handleSubmit} className="flex flex-col gap-2 max-w-sm">
-        <input
-          type="text"
-          name="note"
-          value={formData.note}
-          onChange={handleChange}
-          placeholder="Note"
-          className="border p-2"
-        />
-        <select
-          name="mood"
-          value={formData.mood ?? MoodEnum.Neutral}
-          onChange={handleChange}
-          className="border p-2"
+      {/* Journal Form */}
+      <form onSubmit={handleSubmit} className="mb-8">
+        <div className="mb-4">
+          <label className="block text-sm font-medium text-gray-700">Note</label>
+          <input
+            type="text"
+            name="note"
+            value={formData.note}
+            onChange={handleChange}
+            className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-primary focus:ring-primary"
+            required
+          />
+        </div>
+        <div className="mb-4">
+          <label className="block text-sm font-medium text-gray-700">Mood</label>
+          <select
+            name="mood"
+            value={formData.mood}
+            onChange={handleChange}
+            className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-primary focus:ring-primary"
+          >
+            {Object.entries(MoodEnum)
+              .filter(([key]) => isNaN(Number(key)))
+              .map(([key, value]) => (
+                <option key={key} value={value}>
+                  {key}
+                </option>
+              ))}
+          </select>
+        </div>
+        <div className="mb-4">
+          <label className="block text-sm font-medium text-gray-700">Tag</label>
+          <input
+            type="text"
+            name="tag"
+            value={formData.tag}
+            onChange={handleChange}
+            className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-primary focus:ring-primary"
+          />
+        </div>
+        <button
+          type="submit"
+          className="bg-primary text-white px-4 py-2 rounded hover:bg-opacity-90"
         >
-          <option value={MoodEnum.Broken}>Broken</option>
-          <option value={MoodEnum.Despair}>Despair</option>
-          <option value={MoodEnum.Depressed}>Depressed</option>
-          <option value={MoodEnum.Upset}>Upset</option>
-          <option value={MoodEnum.Tense}>Tense</option>
-          <option value={MoodEnum.Neutral}>Neutral</option>
-          <option value={MoodEnum.Focused}>Focused</option>
-          <option value={MoodEnum.Satisfied}>Satisfied</option>
-          <option value={MoodEnum.Inspired}>Inspired</option>
-          <option value={MoodEnum.Happy}>Happy</option>
-          <option value={MoodEnum.Euphoric}>Euphoric</option>
-        </select>
-        <input
-          type="text"
-          name="tag"
-          value={formData.tag}
-          onChange={handleChange}
-          placeholder="Tag"
-          className="border p-2"
-        />
-        <button type="submit" className="bg-blue-500 text-white p-2 rounded">
-          Submit
+          Add Entry
         </button>
-        {error && <p className="text-red-500">{error}</p>}
       </form>
 
-      <h2 className="mt-6 text-lg font-semibold">Journals</h2>
-      <ul className="space-y-2">
-        {entries.map((entry: JournalResponse) => {
-          console.log("Journal entry from map:", entry);
-          return (
-            <li
-              key={entry.id}
-              className="border rounded p-2 shadow-sm bg-white flex flex-col cursor-pointer hover:bg-gray-50"
-            >
-              <div onClick={() => {
-                setSelected(entry);
-                console.log("Selected journal after click:", entry);
-              }}>
-                <span><strong>Note:</strong> {entry.note}</span>
-                <span><strong>Mood:</strong> {MoodEnum[entry.mood]}</span>
-                <span><strong>Tag:</strong> {entry.tag}</span>
-                <span className="text-sm text-gray-500">
-                  {new Date(entry.createdAt).toLocaleString()}
-                </span>
+      {/* Journal Entries List */}
+      <div className="space-y-4">
+        {entries.map((entry) => (
+          <div
+            key={entry.id}
+            className="border rounded-lg p-4 hover:bg-gray-50 cursor-pointer"
+            onClick={() => setSelected(entry)}
+          >
+            <div className="flex justify-between items-start">
+              <div>
+                <p className="font-medium">{entry.note}</p>
+                <p className="text-sm text-gray-500">
+                  Mood: {MoodEnum[entry.mood]}
+                </p>
+                {entry.tag && (
+                  <span className="inline-block bg-gray-200 rounded-full px-3 py-1 text-sm font-semibold text-gray-700">
+                    {entry.tag}
+                  </span>
+                )}
               </div>
               <button
                 onClick={(e) => {
                   e.stopPropagation();
                   handleDelete(entry.id);
                 }}
-                className="mt-2 bg-red-500 text-white px-3 py-1 rounded hover:bg-red-600 self-end"
+                className="text-red-500 hover:text-red-700"
               >
                 Delete
               </button>
-            </li>
-          );
-        })}
-      </ul>
+            </div>
+          </div>
+        ))}
+      </div>
 
       {/* Деталі вибраного журналу */}
       {selected && selected.id && (
