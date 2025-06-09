@@ -2,11 +2,16 @@ import React, { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { MoodChart } from "../components/MoodChart";
 import { useJournalFetcher } from "../api/fetcher";
+import { useInView } from "../hooks/useInView";
+import { useLanguage } from "../context/LanguageContext";
+import { translations } from "../translations";
 
 export const Home = () => {
   const { entries } = useJournalFetcher();
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const navigate = useNavigate();
+  const { language } = useLanguage();
+  const t = translations[language];
 
   useEffect(() => {
     const token = localStorage.getItem("token");
@@ -19,6 +24,10 @@ export const Home = () => {
     navigate("/");
   };
 
+  const [featuresRef, featuresVisible] = useInView({
+    threshold: 0.1,
+  });
+
   return (
     <div className="min-h-screen">
 
@@ -28,11 +37,11 @@ export const Home = () => {
           <div className="text-center animate-fade-in">
             <h1 className="hero-main-title">
               <span className="block hero-main-title-accent">
-                Відстежуйте свій психічний стан
+                {t.home.title}
               </span>
             </h1>
             <p className="hero-main-subtitle">
-              Приєднуйтесь до тисяч користувачів, які вже покращили своє психічне здоров'я
+              {t.home.subtitle}
             </p>
             {!isAuthenticated && (
               <div className="button-group">
@@ -40,13 +49,13 @@ export const Home = () => {
                   to="/auth/signup"
                   className="btn btn-primary"
                 >
-                  Почніть безкоштовно
+                  {t.home.startFree}
                 </Link>
                 <Link
                   to="/auth/signin"
                   className="btn btn-secondary"
                 >
-                  Увійти
+                  {t.home.login}
                 </Link>
               </div>
             )}
@@ -57,52 +66,58 @@ export const Home = () => {
       {/* Social Proof */}
       <div className="social-proof-section">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="grid grid-cols-1 gap-8 md:grid-cols-3">
-            <div className="social-proof-item">
-              <div className="social-proof-value">10K+</div>
-              <div className="social-proof-label">Активних користувачів</div>
-            </div>
-            <div className="social-proof-item">
-              <div className="social-proof-value">98%</div>
-              <div className="social-proof-label">Задоволених користувачів</div>
-            </div>
+          <div className="social-proof-container">
+              <div className="social-proof-item">
+                <div className="social-proof-value">10K+</div>
+                  <div className="social-proof-label">{t.home.users}</div>
+                </div>
+              <div className="social-proof-item">
+                <div className="social-proof-value">98%</div>
+                <div className="social-proof-label">{t.home.satisfaction}</div>
+              </div>
             <div className="social-proof-item">
               <div className="social-proof-value">24/7</div>
-              <div className="social-proof-label">Підтримка</div>
+              <div className="social-proof-label">{t.home.support}</div>
             </div>
           </div>
         </div>
       </div>
 
+
       {/* Features Section */}
-      <div className="features-section">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="grid grid-cols-1 gap-8 md:grid-cols-3">
-            <div className="feature-card">
-              <div className="feature-icon-wrapper">
-                <span className="feature-icon">📊</span>
-              </div>
-              <h3 className="feature-title">Відстеження настрою</h3>
+      <div
+        ref={featuresRef}
+        className={`features-section transition-opacity duration-1000 ${
+        featuresVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-10"
+        }`}
+        >
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div className="grid grid-cols-1 gap-8 md:grid-cols-3">
+              <div className="feature-card">
+                <div className="feature-icon-wrapper">
+                  <span className="feature-icon">📊</span>
+                </div>
+                <h3 className="feature-title">{t.home.features.mood.title}</h3>
               <p className="feature-description">
-                Записуйте свій настрій щодня та отримуйте детальну статистику
+                {t.home.features.mood.description}
               </p>
             </div>
             <div className="feature-card">
               <div className="feature-icon-wrapper">
                 <span className="feature-icon">📝</span>
               </div>
-              <h3 className="feature-title">Щоденник думок</h3>
+              <h3 className="feature-title">{t.home.features.journal.title}</h3>
               <p className="feature-description">
-                Зберігайте свої думки та роздуми в зручному форматі
+                {t.home.features.journal.description}
               </p>
             </div>
-            <div className="feature-card">
-              <div className="feature-icon-wrapper">
-                <span className="feature-icon">📈</span>
+              <div className="feature-card">
+                <div className="feature-icon-wrapper">
+                  <span className="feature-icon">📈</span>
               </div>
-              <h3 className="feature-title">Аналітика</h3>
+              <h3 className="feature-title">{t.home.features.analytics.title}</h3>
               <p className="feature-description">
-                Отримуйте інсайти про свій психічний стан завдяки графікам
+                {t.home.features.analytics.description}
               </p>
             </div>
           </div>
@@ -114,7 +129,7 @@ export const Home = () => {
         <div className="chart-preview-section">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div className="chart-card">
-              <h2 className="chart-title">Ваш настрій за останній час</h2>
+              <h2 className="chart-title">{t.home.chartPreviewTitle}</h2>
               <div className="chart-height">
                 <MoodChart entries={entries} />
               </div>
@@ -129,23 +144,23 @@ export const Home = () => {
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div className="text-center">
               <h2 className="cta-title">
-                Почніть відстежувати свій настрій сьогодні
+                {t.home.cta.title}
               </h2>
               <p className="cta-subtitle">
-                Приєднуйтесь до нашої спільноти та покращуйте своє психічне здоров'я
+                {t.home.cta.subtitle}
               </p>
               <div className="button-group">
                 <Link
                   to="/auth/signup"
                   className="btn btn-primary"
                 >
-                  Зареєструватися
+                  {t.home.cta.register}
                 </Link>
                 <Link
                   to="/auth/signin"
                   className="btn btn-secondary"
                 >
-                  Увійти
+                  {t.home.cta.login}
                 </Link>
               </div>
             </div>

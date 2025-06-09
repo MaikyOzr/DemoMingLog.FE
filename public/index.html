@@ -83,16 +83,6 @@ h1 {
   }
 }
 
-.hello-world-title {
-  font-size: 2rem;
-  font-weight: 700;
-  text-decoration: none;
-  text-align: center;
-  color: #6C47F6; /* Consistent vibrant color for titles */
-  margin-bottom: 1rem;
-  font-family: 'Outfit', sans-serif; /* Outfit for headings */
-}
-
 h2 {
   font-size: 2.25rem;
   font-weight: 700;
@@ -263,6 +253,7 @@ p {
   margin-bottom: 1.5rem;
   font-family: 'Outfit', sans-serif;
   line-height: 1.2;
+  text-align: center;
 }
 
 .hero-main-title-accent {
@@ -295,14 +286,23 @@ p {
   margin-bottom: 3rem;
 }
 
+.social-proof-container {
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  flex-wrap: wrap; /* щоб на маленьких екранах переносилось */
+  gap: 2rem;
+}
+
 .social-proof-item {
   text-align: center;
+  min-width: 150px; /* щоб виглядало красиво */
 }
 
 .social-proof-value {
   font-size: 3rem;
   font-weight: 800;
-  color: #6C47F6; /* Vibrant accent color */
+  color: #6C47F6;
   font-family: 'Outfit', sans-serif;
 }
 
@@ -312,10 +312,13 @@ p {
   margin-top: 0.5rem;
 }
 
+
 /* Features Section */
 .features-section {
-  padding: 4rem 0;
+  will-change: opacity, transform;
+  transition: opacity 1s ease-out, transform 1s ease-out;
 }
+
 
 .feature-card {
   padding: 2rem;
